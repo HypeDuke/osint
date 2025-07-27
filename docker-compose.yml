@@ -1,45 +1,67 @@
-version: '3.8'
+version: '3.9'
 
 services:
   postgres:
     image: postgres:15
+    container_name: postgres
+    restart: always
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: accountdb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: leakdb
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
-  redis:
-    image: redis:7
-    ports:
-      - "6379:6379"
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    container_name: elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
     ports:
       - "9200:9200"
     volumes:
       - esdata:/usr/share/elasticsearch/data
 
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+
   backend:
-    build: ./backend  # FastAPI / Django REST
+    build:
+      context: ./backend
+    container_name: backend
+    restart: always
+    volumes:
+      - ./patterns:/app/patterns
+    ports:
+      - "8001:8001"
     depends_on:
       - postgres
-      - redis
+
+  crawler:
+    build:
+      context: ./crawler
+    container_name: crawler
+    restart: always
+    volumes:
+      - ./patterns:/app/patterns
+      - ./crawler/leak_sample.txt:/app/leak_sample.txt
+    depends_on:
       - elasticsearch
-    ports:
-      - "8000:8000"
 
   frontend:
-    build: ./frontend  # React hoặc Vue
+    build:
+      context: ./frontend
+    container_name: frontend
     ports:
-      - "3000:3000"
+      - "5173:5173"
     depends_on:
       - backend
 
