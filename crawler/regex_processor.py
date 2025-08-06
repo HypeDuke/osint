@@ -19,8 +19,11 @@ def load_patterns():
     for file in os.listdir(PATTERN_DIR):
         if file.endswith(".json"):
             with open(os.path.join(PATTERN_DIR, file), "r", encoding="utf-8") as f:
-                patterns.extend(json.load(f))
-    return [re.compile(p, re.IGNORECASE) for p in patterns]
+                pattern_data = json.load(f)
+                for item in pattern_data.get("patterns", []):
+                    compiled = re.compile(item["pattern"], re.IGNORECASE)
+                    patterns.append({"id": item["id"], "regex": compiled})
+    return patterns
 
 def process_file(file_path, compiled_patterns):
     results = []
@@ -29,11 +32,12 @@ def process_file(file_path, compiled_patterns):
             lines = f.readlines()
             for i, line in enumerate(lines):
                 for pattern in compiled_patterns:
-                    if pattern.search(line):
+                    if pattern["regex"].search(line):
                         results.append({
                             "file": os.path.basename(file_path),
                             "line": i + 1,
                             "content": line.strip(),
+                            "pattern_id": pattern["id"],
                             "timestamp": datetime.utcnow().isoformat()
                         })
     except Exception as e:
