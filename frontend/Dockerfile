@@ -1,12 +1,18 @@
-# frontend/Dockerfile
-FROM node:18
+# Base image
+FROM node:20-alpine
 
+# Create app directory
 WORKDIR /app
 
+# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
 
+# Copy source code
 COPY . .
 
-EXPOSE 3000
-CMD ["npm", "start"]
+# Expose Vite dev server port
+EXPOSE 5173
+
+# Start app
+CMD ["npm", "run", "dev"]

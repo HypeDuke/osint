@@ -1,69 +1,80 @@
-version: '3.9'
+version: '3.8'
 
 services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - VITE_API_URL=http://localhost:8001
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - ./patterns:/app/patterns
+    depends_on:
+      - db
+      - elasticsearch
+
+  crawler:
+    build:
+      context: ./crawler
+    volumes:
+      - ./host_data:/data                # Mount thư mục chứa các file txt
+      - ./patterns:/app/patterns         # Mount pattern JSON
+    env_file:
+      - .env
+    depends_on:
+      - elasticsearch
+
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.16
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - "9200:9200"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+ 
   postgres:
     image: postgres:15
     container_name: postgres
     restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: leakdb
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
-    ports:
-      - "9200:9200"
-    volumes:
-      - esdata:/usr/share/elasticsearch/data
-
-  redis:
-    image: redis:7
-    container_name: redis
-    restart: always
-    ports:
-      - "6379:6379"
-
-  backend:
-    build:
-      context: ./backend
-    container_name: backend
-    restart: always
-    volumes:
-      - ./patterns:/app/patterns
-    ports:
-      - "8001:8001"
-    depends_on:
-      - postgres
-
-  crawler:
-    build:
-      context: ./crawler
-    container_name: crawler
-    restart: always
-    volumes:
-      - ./patterns:/app/patterns
-      - ./crawler/leak_sample.txt:/app/leak_sample.txt
-    depends_on:
-      - elasticsearch
-
-  frontend:
-    build:
-      context: ./frontend
-    container_name: frontend
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   pgdata:

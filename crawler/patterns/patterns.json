@@ -1,0 +1,9 @@
+{
+  "patterns": [
+    "@napas\\.com\\.vn",
+    "card_num",
+    "ebank",
+    "https://napas\\.com\\.vn",
+    "https://.*\\.napas\\.com\\.vn"
+  ]
+}

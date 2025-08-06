@@ -1,11 +1,14 @@
-# crawler/Dockerfile
 FROM python:3.11-slim
 
+# Set working directory
 WORKDIR /app
 
-COPY crawler.py .
-COPY leak_sample.txt .
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir requests
+# Copy crawler code
+COPY . .
 
-CMD ["python", "crawler.py"]
+# Default command (can be overridden in docker-compose if needed)
+CMD ["python", "regex_processor.py"]
