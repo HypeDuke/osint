@@ -5,8 +5,12 @@ from passlib.hash import bcrypt
 from datetime import datetime, timedelta
 from models import User, get_db
 import os
+from dotenv import load_dotenv
+
+load_dotenv()  # Load .env variables
 
 auth_router = APIRouter()
+
 SECRET_KEY = os.getenv("SECRET_KEY", "supersecret")
 ALGORITHM = "HS256"
 
