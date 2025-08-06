@@ -3,7 +3,7 @@ from elasticsearch import Elasticsearch
 import os
 
 es_router = APIRouter()
-es = Elasticsearch([{"host": os.getenv("ES_HOST", "elasticsearch"), "port": 9200}])
+es = Elasticsearch([{"host": os.getenv("ES_HOST", "elasticsearch"), "port": 9200, "scheme": "http"}])
 
 @es_router.get("/")
 def search(keyword: str = Query(..., min_length=1)):

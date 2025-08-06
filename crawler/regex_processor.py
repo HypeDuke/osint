@@ -11,7 +11,7 @@ INPUT_DIR = "./input_data"
 ES_HOST = os.getenv("ES_HOST", "elasticsearch")
 ES_PORT = int(os.getenv("ES_PORT", 9200))
 
-es = Elasticsearch([{"host": ES_HOST, "port": ES_PORT}])
+es = Elasticsearch([{"host": ES_HOST, "port": ES_PORT, "scheme": "http"}])
 INDEX_NAME = "leaked_data"
 
 def load_patterns():
