@@ -7,7 +7,7 @@ from elasticsearch import Elasticsearch
 from datetime import datetime
 
 PATTERN_DIR = "./patterns"
-INPUT_DIR = "./input_data"
+INPUT_DIR = "./data"
 ES_HOST = os.getenv("ES_HOST", "elasticsearch")
 ES_PORT = int(os.getenv("ES_PORT", 9200))
 

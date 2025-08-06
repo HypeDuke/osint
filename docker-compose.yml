@@ -29,7 +29,7 @@ services:
     build:
       context: ./crawler
     volumes:
-      - /mnt/hgfs/sharevm/:/data         # Mount thư mục chứa các file txt
+      - /mnt/hgfs/sharevm/:/app/data         # Mount thư mục chứa các file txt
       - ./patterns:/app/patterns         # Mount pattern JSON
     env_file:
       - .env
