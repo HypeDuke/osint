@@ -1,19 +1,16 @@
-# Base image
 FROM node:20-alpine
 
-# Create app directory
 WORKDIR /app
 
-# Install dependencies
-#COPY package.json package-lock.json ./
+# Copy package.json and install dependencies
 COPY package.json ./
 RUN npm install
 
-# Copy source code
+# Copy rest of the app
 COPY . .
 
-# Expose Vite dev server port
+# Expose Vite dev port
 EXPOSE 5173
 
-# Start app
+# Default command to start Vite Dev Server
 CMD ["npm", "run", "dev"]

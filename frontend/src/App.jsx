@@ -1,27 +1,26 @@
-import React, { useState } from 'react'
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
-import PatternAdmin from './PatternAdmin'
-import Search from './Search'
-import AccountManager from './AccountManager'
-import Login from './Login'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import Home from './pages/Home'
+import Search from './pages/Search'
+import Accounts from './pages/Accounts'
+import Login from './components/Login'
+import { useState } from 'react'
 
 function App() {
   const [token, setToken] = useState(null)
 
-  if (!token) {
-    return <Login onLogin={setToken} />
-  }
+  if (!token) return <Login onLogin={setToken} />
 
   return (
     <Router>
-      <nav>
-        <Link to="/">Patterns</Link> | <Link to="/search">Search</Link> | <Link to="/accounts">Accounts</Link>
-      </nav>
-      <Routes>
-        <Route path="/" element={<PatternAdmin />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/accounts" element={<AccountManager token={token} />} />
-      </Routes>
+      <Navbar />
+      <div className="p-4">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/accounts" element={<Accounts token={token} />} />
+        </Routes>
+      </div>
     </Router>
   )
 }
