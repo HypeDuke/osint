@@ -1,9 +1,9 @@
 {
   "patterns": [
-    "@napas\\.com\\.vn",
-    "card_num",
-    "ebank",
-    "https://napas\\.com\\.vn",
-    "https://.*\\.napas\\.com\\.vn"
+    { "id": "P001", "pattern": "@napas\\.com\\.vn" },
+    { "id": "P002", "pattern": "card_num" },
+    { "id": "P003", "pattern": "ebank" },
+    { "id": "P004", "pattern": "https://napas\\.com\\.vn" },
+    { "id": "P005", "pattern": "https://.*\\.napas\\.com\\.vn" }
   ]
 }
