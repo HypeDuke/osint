@@ -22,7 +22,7 @@ services:
       - ./backend:/app
       - ./patterns:/app/patterns
     depends_on:
-      - db
+      - postgres
       - elasticsearch
 
   crawler:
