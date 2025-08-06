@@ -5,7 +5,7 @@ export default function SearchLeakedData() {
   const [results, setResults] = useState([])
 
   const search = async () => {
-    const res = await fetch(`/search?q=${encodeURIComponent(query)}`)
+    const res = await fetch(`/search/?keyword=${encodeURIComponent(query)}`)
     const data = await res.json()
     setResults(data)
   }
@@ -20,6 +20,7 @@ export default function SearchLeakedData() {
         onChange={(e) => setQuery(e.target.value)}
       />
       <button onClick={search} className="bg-blue-500 text-white px-4 py-2 rounded">Search</button>
+
       <ul className="mt-4 space-y-2">
         {results.map((r, i) => (
           <li key={i} className="bg-gray-100 p-2 rounded">{r.content}</li>
