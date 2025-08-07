@@ -8,7 +8,7 @@ export default function Login({ onLogin }) {
   const [password, setPass] = useState('')
 
   const handleLogin = async () => {
-    const res = await fetch(`${API_BASE}/login`, {
+    const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password }),
