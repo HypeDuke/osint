@@ -24,6 +24,8 @@ export default function Login({ onLogin }) {
   return (
     <div>
       <h2>Login</h2>
+      <p>API BASE: {import.meta.env.VITE_API_URL}</p>
+
       <input
         placeholder="Username"
         value={username}
