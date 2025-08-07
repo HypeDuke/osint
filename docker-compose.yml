@@ -4,7 +4,7 @@ services:
       context: ./frontend
     ports:
       - "5173:5173"
-    environment:
+    env_file:
       - .env
     depends_on:
       - backend
