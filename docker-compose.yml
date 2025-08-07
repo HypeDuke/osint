@@ -5,9 +5,7 @@ services:
     ports:
       - "5173:5173"
     env_file:
-      - .env
-    environment:
-      - VITE_API_URL=http://backend:8001
+      - ./frontend/.env
     depends_on:
       - backend
 
@@ -17,7 +15,7 @@ services:
     ports:
       - "8001:8001"
     env_file:
-      - .env
+      - ./backend/.env
     volumes:
       - ./backend:/app
       - ./patterns:/app/patterns
@@ -29,10 +27,10 @@ services:
     build:
       context: ./crawler
     volumes:
-      - /mnt/hgfs/sharevm/:/app/data         # Mount thư mục chứa các file txt
-      - ./patterns:/app/patterns         # Mount pattern JSON
+      - /mnt/hgfs/sharevm/:/app/data
+      - ./patterns:/app/patterns
     env_file:
-      - .env
+      - ./crawler/.env
     depends_on:
       - elasticsearch
 
@@ -51,7 +49,7 @@ services:
       - "9200:9200"
     volumes:
       - esdata:/usr/share/elasticsearch/data
- 
+
   postgres:
     image: postgres:15
     container_name: postgres
