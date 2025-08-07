@@ -23,7 +23,7 @@ def register(user: UserSchema, db=Depends(get_db)):
     if db.query(User).filter(User.username == user.username).first():
         raise HTTPException(status_code=400, detail="User already exists")
     hashed = bcrypt.hash(user.password)
-    db_user = User(username=user.username, hashed_password=hashed)
+    db_user = User(username=user.username, password_hash=hashed)
     db.add(db_user)
     db.commit()
     return {"msg": "Registered"}
@@ -31,7 +31,7 @@ def register(user: UserSchema, db=Depends(get_db)):
 @auth_router.post("/login")
 def login(user: UserSchema, db=Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
-    if not db_user or not bcrypt.verify(user.password, db_user.hashed_password):
+    if not db_user or not bcrypt.verify(user.password, db_user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = jwt.encode(
         {"sub": user.username, "exp": datetime.utcnow() + timedelta(hours=2)},
