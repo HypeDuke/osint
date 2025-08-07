@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Tài khoản admin mẫu (hash password bằng bcrypt, ví dụ cho demo thôi)
 INSERT INTO users (username, password_hash, role)
-VALUES ('admin', '$2b$12$abcdefghijklmno123456urZhR5gFkEkUMoAvj1fhPyIh', 'admin')
+VALUES ('admin', '$2b$12$mz/zDk9tK5iMopMuUeFvQO6Dsxz/ZhHeIGCzY44ULF8zYbiv12Xwq', 'admin')
 ON CONFLICT (username) DO NOTHING;
